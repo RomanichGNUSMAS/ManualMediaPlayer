@@ -3,5 +3,8 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+  <Folder Name="/Элементы решения/">
+    <File Path="../../../Downloads/miniaudio-0.11.25/miniaudio.h" />
+  </Folder>
   <Project Path="ManualMediaPlayer/ManualMediaPlayer.vcxproj" Id="50553dcc-4958-4740-94ad-0d0c6013ef5b" />
 </Solution>

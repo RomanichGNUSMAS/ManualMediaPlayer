@@ -1,6 +1,6 @@
 #pragma once
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
-void ControllerLoop();
+int ControllerLoop();
 
 #endif // !CONTROLLER_H

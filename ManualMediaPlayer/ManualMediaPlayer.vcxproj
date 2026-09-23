@@ -70,6 +70,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -142,10 +145,11 @@
     <ClInclude Include="Adder.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="SelectorLoop.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ArmenianMusic.cpp" />
+    <ClCompile Include="Adder.cpp" />
+    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
