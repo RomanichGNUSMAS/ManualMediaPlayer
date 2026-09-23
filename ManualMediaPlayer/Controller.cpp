@@ -6,49 +6,70 @@
 #include <thread>
 
 int ControllerLoop() {
-	std::string input;
-	std::jthread t1;
-	Player player;
-	while (true) {
-		std::cout << "Commands:" << std::endl;
-		std::cout << "p <filename> - Play a file" << std::endl;
-		std::cout << "s - Stop playback" << std::endl;
-		std::cout << "a <filename> - Add a file to the playlist" << std::endl;
-		std::cout << "q - Quit the player" << std::endl;
-		std::string input;
-		std::getline(std::cin, input);
-		switch (input[0]) {
-		case 'p': {
-			if (input.length() < 3) break;
-			std::string filename = input.substr(2);
+    std::string input;
+    std::jthread playThread;
+    Player player;
 
-			// Присваивание нового потока автоматически остановит (join) старый t1
-			t1 = std::jthread([&player, &filename]() {
-				player.Play(filename == "wave" ? "" : filename, 0);
-				});
-			break;
-		}
+    while (true) {
+        std::cout << "\nCommands:\n"
+            << "s <filename> - Play a file (or 's wave')\n"
+            << "p            - Pause playback\n"
+            << "c            - Continue playback\n"
+            << "e            - Stop playback\n"
+            << "a <filename> - Add a file to the playlist\n"
+            << "q            - Quit\n> ";
 
-		case 's': {
-			t1 = std::jthread(&Player::Stop, &player);
-			;
-			break;
-		}
-		case 'a': {
-			std::string filename = input.substr(2);
-			std::string result;
-			std::jthread temp([&]() {
-				result = Add(filename);
-			});
-			std::cout << result << std::endl;
-			break;
-		}
-		case 'q':
-			return 0;
-		default:
-			return 1;
-		}
-	}
-	return 0;
+        if (!std::getline(std::cin, input) || input.empty()) {
+            continue; 
+        }
+
+        switch (input[0]) {
+        case 's': {
+            if (input.length() < 2) break;
+
+            std::string filename = (input.length() > 2) ? input.substr(2) : "";
+            if (filename.empty()) break;
+
+            player.Stop();
+
+            playThread = std::jthread([&player, filename]() {
+                player.Play(filename, 0);
+                });
+            break;
+        }
+        case 'p': {
+            player.Pause();
+            break;
+        }
+        case 'c': {
+            player.Resume();
+            break;
+        }
+        case 'e': {
+            player.Stop();
+            break;
+        }
+        case 'a': {
+            if (input.length() < 3) break;
+            std::string filename = input.substr(2);
+            std::string result;
+
+            {
+                std::jthread temp([&result, filename]() {
+                    result = Add(filename);
+                    });
+            }
+            std::cout << "[Adder]: " << result << std::endl;
+            break;
+        }
+        case 'q': {
+            player.Stop();
+            return 0;
+        }
+        default:
+            std::cout << "Неизвестная команда!" << std::endl;
+            break;
+        }
+    }
+    return 0;
 }
-
